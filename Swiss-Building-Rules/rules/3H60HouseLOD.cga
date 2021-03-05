@@ -1,0 +1,213 @@
+import SULO : 	"6SetUpLOD.cga"
+
+attr height1 = rint(rand(2,6))
+attr height2 = rint(rand(2,7))
+
+attr H60iesBuildingHeight				= 	75%:	height2*H60iesFloor_height
+											else:	height1*H60iesFloor_height
+attr H60iesGroundfloor_height 			= H60iesFloor_height+1
+attr H60iesFloor_height 				= rand(2.5 , 3.1)
+attr H60iesTile_drain 					= 0.5
+attr H60iesTile_width1 					= rand(3.75, 14)
+attr H60iesTile_width2 					= rand(3.75, 14)
+attr H60iesTile_width3 					= rand(3.75, 14)
+attr H60iesTile_width4 					= rand(3.75, 14)
+attr H60iesTile_width5 					= rand(3.75, 14)
+attr H60iesDoor_width					= rand(5, 7)
+
+const cleanupFactor						= 0.01 
+
+
+H60iesStart --> 		H60iesStart2
+H60iesStart2 -->
+						setback(SULO.setbackdistances){all = NIL | remainder = H60Lot2}
+H60Lot2-->				alignScopeToAxes()
+						innerRectangle(edge){shape = H60Lot3 | remainder = NIL }
+H60Lot3-->				alignScopeToGeometry(yUp,largest, 0) H60Lot4
+H60Lot4-->				case scope.sx < 12 || scope.sz < 12 : NIL //FamilyHouseStart 
+						else : extrude(H60iesBuildingHeight) H60Building(scope.sx, scope.sz)	
+H60Building(scpX, scpZ) -->		comp(f){front : H60FrontFacade(scpX, scpZ) | back : H60BackFacade(scpX, scpZ) | left : H60SideFacade(scpX, scpZ) | right : H60SideFacade(scpX, scpZ)| top: H60Roof}
+
+
+
+H60Roof -->			roofGable(26,1)
+					comp(f){top = H60Top | side: H60Wall}
+H60Top -->			extrude(vertex.normal, 0.3) comp(f){object.top: H60Top1 | 3: H60Verti | 4: H60Verti | 7: H60Verti | 8: H60Verti | 9: H60Verti | 12: H60Verti | 5: H60Top2 | 10: H60Top2 }
+H60Top1 -->			color(SULO.rot) SULO.ZiegelRoof
+
+
+
+H60Verti -->		color(SULO.brown) SULO.RoofSide 
+H60Top2 -->			color(SULO.brown) SULO.RoofUnderSide 	
+
+H60FrontFacade(scpX, scpZ) -->	
+	//setupProjection(0, scope.xy, 1.5, 1, 0, 0, 1) # setup 1.5m x 1m texture tiles along scopes xy plane (and distortion in z)
+	//setupProjection(2, scope.xy, scope.sx, scope.sy)
+	split(y){ ~H60iesGroundfloor_height    : H60Floor(split.index, split.total, scpX, scpZ)
+			| {~H60iesFloor_height : H60Floor(split.index, split.total, scpX, scpZ) }* }
+ 
+ H60SideFacade(scpX, scpZ) --> 
+	//setupProjection(0, scope.xy, 1.5, 1, 0, 0, 1) # setup 1.5m x 1m texture tiles along scopes xy plane (and distortion in z)
+	//setupProjection(2, scope.xy, scope.sx, scope.sy)
+ 	split(y){ ~H60iesGroundfloor_height    : H60Floor(split.index, split.total, scpX, scpZ)
+			| {~H60iesFloor_height : H60Floor(split.index, split.total, scpX, scpZ) }* }
+H60BackFacade(scpX, scpZ) -->
+	split(y){ ~H60iesGroundfloor_height    : H60Floor(split.index, split.total, scpX, scpZ)
+ 			| {~H60iesFloor_height : H60Floor(split.index, split.total, scpX, scpZ) }* }
+
+
+	
+
+H60Floor(floorIndex, floorTotal, scpX, scpZ) -->
+
+case scpX < scpZ:
+		case comp.sel == "front":
+		split(x){ 1 : H60Wall 
+			| { ~H60iesTile_width1 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }*
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) } 
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| 1 : H60Wall }
+			
+	case comp.sel == "right":
+			split(x){ {H60iesTile_drain : H60Drain(floorIndex, floorTotal)} 
+			| { ~H60iesTile_width1 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }*
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesTile_width3 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesTile_width4 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesTile_width5 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| {H60iesTile_drain : H60Drain(floorIndex, floorTotal)}
+			| {~1 : H60Wall}}
+	
+	case comp.sel == "left":
+	split(x){ {H60iesTile_drain : H60Drain(floorIndex, floorTotal)} 
+			| { ~H60iesTile_width1 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }*
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesDoor_width : H60Door(floorIndex, floorTotal) } 
+			| { ~H60iesTile_width4 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesTile_width5 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| {~H60iesTile_drain : H60Drain(floorIndex, floorTotal)}
+			}
+	case comp.sel == "back":
+		split(x){ 1 : H60Wall 
+			| { ~H60iesTile_width1 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }*
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) } 
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| 1 : H60Wall }
+			//| {~1 : H60Wall}
+	else :
+	H60Wall
+	
+else: 
+	case comp.sel == "front":
+		split(x){ {H60iesTile_drain : H60Drain(floorIndex, floorTotal)} 
+			| { ~H60iesTile_width1 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }*
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesTile_width3 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesTile_width4 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesTile_width5 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| {H60iesTile_drain : H60Drain(floorIndex, floorTotal)}
+			| {~1 : H60Wall}}
+	case comp.sel == "left" || comp.sel == "right":
+		split(x){ 1 : H60Wall 
+			| { ~H60iesTile_width1 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }*
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) } 
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| 1 : H60Wall }
+	case comp.sel == "back":
+	split(x){ {H60iesTile_drain : H60Drain(floorIndex, floorTotal)} 
+			| { ~H60iesTile_width1 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }*
+			| { ~H60iesTile_width2 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { H60iesDoor_width : H60Door(floorIndex, floorTotal) } 
+			| { ~H60iesTile_width4 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| { ~H60iesTile_width5 : H60Tile(floorIndex, floorTotal, scpX, scpZ) }* 
+			| {~H60iesTile_drain : H60Drain(floorIndex, floorTotal)}
+			}
+			//| {~1 : H60Wall}
+	else :
+	H60Wall
+
+const storensy = 75%: 2
+				else: 3
+				
+H60Tile(floorIndex, floorTotal, scpX, scpZ) --> 
+	case floorIndex == 0 : 
+		case scope.sx < 4 :
+		split(x){ ~1 : H60Wall 
+				|  2 : split(y){ 2.1: H60Wall | 1.3: H60Window2 SULO.StorenTile(storensy, scope.sx,scope.sy, SULO.H60Colors) | ~1: H60Wall }
+				| ~1 : H60Wall }		 
+		case scope.sx > 10 :
+		H60Gelaender(floorIndex, floorTotal, scpX, scpZ)
+		split(x){ ~0.5 : H60Wall 
+				| ~2 : split(y){ 1.15: Bfloor |3.5: H60Balcony | ~0.1: H60Wall }
+				| ~0.5 : H60Wall }
+		else :
+		split(x){ ~0.5 : H60Wall 
+				|  3 : split(y){ 1.7: H60Wall | 2.2: H60Window1 SULO.StorenTile(storensy, scope.sx,scope.sy, SULO.H60Colors) | ~1: H60Wall }
+				| ~0.5 : H60Wall }
+	else :
+	case scope.sx < 4 :
+	split(x){ ~1 : H60Wall 
+			|  1.9 : split(y){ 1.1: H60Wall | 1.3: H60Window2 SULO.StorenTile(storensy, scope.sx,scope.sy, SULO.H60Colors)| ~1: H60Wall }
+			| ~1 : H60Wall }		 
+	case scope.sx > 10 :
+	H60Gelaender(floorIndex, floorTotal, scpX, scpZ)
+	split(x){ ~0.5 : H60Wall 
+			| ~2 : split(y){ 0.15: Bfloor |3.5: H60Balcony | ~0.1: H60Wall }
+			| ~0.5 : H60Wall }
+	else :
+	split(x){ ~1 : H60Wall 
+			|  3 : split(y){ 0.7: H60Wall | 2.2: H60Window1 SULO.StorenTile(storensy, scope.sx,scope.sy, SULO.H60Colors)| ~1: H60Wall }
+			| ~1 : H60Wall }
+	
+H60Drain(floorIndex, floorTotal)-->
+	case (floorIndex == floorTotal-1) : H60Wall
+	case (floorIndex == 0) : H60Wall
+	else: H60Wall
+
+H60Window1 -->
+
+	  case split.index ==0 :
+	  	s('1,'1,0)
+		i(SULO.Fenster3)t(0,0,-0.02)
+		SULO.Vorhang(6)
+	  else:
+		s('1,'1,0)
+		i(SULO.Fenster3)t(0,0,-0.02)
+		SULO.Vorhang(6)
+
+H60Window2 -->
+ 	s('1,'1,0)
+	i(SULO.Kuechenfenster)t(0,0,-0.02) SULO.Vorhang(7)
+
+attr inset = 1.2
+ H60Gelaender(floorIndex, floorTotal, scpX, scpZ) -->
+	 NIL
+
+ H60Balcony -->
+ split(x){0.2: BWal|~1:BBWal|2.75:Doory StorenTilePre(scope.sx, scope.sy) |~1:BBWal|0.2: BWal}
+ 
+ Bfloor -->H60Wall
+ BWal -->
+ H60Wall
+ BBWal -->H60Wall
+ 
+ Doory-->
+
+ 	i(SULO.Fenster3Tuere) t(0,0,-0.02)
+ 	
+StorenTilePre(scpX, scpY) --> SULO.StorenTile(1,scpX,scpY, SULO.H60Colors)
+
+ H60Door(floorIndex, floorTotal) --> H60Wall
+	
+const walsy = 	60%: 1 
+				10%: 3
+				else: 2
+
+ H60Wall-->
+	case walsy == 1 : color(SULO.H60Colors) cleanupGeometry(edges,0.11) SULO.DryWall1
+	case walsy == 3 : color(SULO.H60Colors) cleanupGeometry(edges,0.11) SULO.WabenMusterPlatten
+	else: color(SULO.H60Colors) cleanupGeometry(edges,0.11) SULO.DryWall2
+				
+	
+
+							

@@ -1,0 +1,454 @@
+
+
+#Attributes
+#-------------------------------------------------------------------------------------------------------------
+#COLORS
+
+
+/*
+attr ziegel1 		= colorRGBToHex(rand(0.8,0.9),rand(0.2,0.5),rand(0.1,0.2))//red
+attr ziegel2		= colorHSVToHex(rand(35,45),rand(0.85,0.95),rand(0.55,0.81))//ocker
+attr brown			= colorHSVToHex(rand(20,45),rand(0.40,0.75),rand(0.35,1))
+attr DarkGrays		= colorRGBToHex(rand(0.58,0.65)+rand(-0.02,0.01),rand(0.58,0.65)+rand(-0.01,0.01),rand(0.58,0.65)+rand(-0.01,0.03))
+attr AutumnGrays	= colorRGBToHex(0.76274509803921568627450980392157+rand(-0.03,0.03),0.75294117647058823529411764705882+rand(-0.01,0.01),0.78039215686274509803921568627451+rand(-0.02,0.03))
+attr GrayishBlues	= colorHSVToHex(rand(195,225),rand(0.05,0.25),rand(0.60,0.81))//BluishGrays
+attr YellowNRose	= colorRGBToHex(1-rand(0,0.05),0.83529411764705882352941176470588+rand(-0.02,0.12),0.6+rand(-0.3,0.2))
+attr GrayToWhite	= colorHSVToHex(0, 0, rand(0.67,1.1)) 
+attr Bordeaux		= colorHSVToHex(0, rand(0.3,0.7), 0.5)
+attr Darkblue		= colorHSVToHex(207, rand(0.3,0.7), 0.55)
+attr DarkGrayGreen	= colorHSVToHex(110, rand(0.10,0.4), 0.66)
+*/						
+attr ziegel1 		= colorRGBToHex(0.9,0.30,0.10)//red
+attr ziegel2		= colorHSVToHex(40,0.9,0.85)//ocker
+attr brown			= colorHSVToHex(32.5,0.575,0.675)
+
+attr rot 			= 50%: ziegel1
+					else: ziegel2
+
+
+attr White			= colorHSVToHex(0, 0, 0.97) 
+attr lighterGray	= colorHSVToHex(0,0,0.85)
+attr lightGray		= colorRGBToHex(0.76274509803921568627450980392157,0.75294117647058823529411764705882,0.7803921568627450980392156862745)
+attr DarkGray		= colorRGBToHex(0.6175,0.6175,0.6175)
+attr lightYellow	= colorHSVToHex(55, 0.35, 0.99)
+attr Yellow			= colorHSVToHex(55, 0.5, 0.955)
+attr Orange			= colorHSVToHex(45, 0.5, 0.955)
+attr Rose			= colorHSVToHex(17, 0.156, 0.989)
+attr lightBordeaux	= colorHSVToHex(0, 0.4, 0.7)
+attr Bordeaux		= colorHSVToHex(0, 0.5, 0.5)
+attr lightBlue		= colorHSVToHex(190, 0.1,0.99)
+attr GrayishBlue	= colorHSVToHex(210,0.25,0.77)//BluishGrays
+attr Darkblue		= colorHSVToHex(207, 0.45, 0.55)
+attr lightGrayGreen	= colorHSVToHex(110, 0.1, 0.87)
+attr DarkGrayGreen	= colorHSVToHex(110, 0.24, 0.66)
+
+
+
+attr Grays				=	33%: lighterGray
+							33%: lightGray
+							else: DarkGray
+attr YellowsNRoses		=
+							30%: lightYellow
+							30%: Yellow
+							30%: Orange
+							else: Rose
+attr Bordeauxes			=
+							50%:lightBordeaux
+							else:Bordeaux
+attr Blues				=	
+							33%:lightBlue
+							33%:GrayishBlue
+							else:Darkblue
+attr Greens				=
+							50%: lightGrayGreen
+							else: DarkGrayGreen
+
+
+attr AllWColors		=		
+							7%: White
+							20%:Grays
+							21%:Blues
+							23%:YellowsNRoses
+							18%:Bordeauxes
+							else: Greens
+						
+attr H60Colors		=	
+						7%: White
+						23%:Grays
+						15%:lightBlue
+						7%:GrayishBlue
+						35%: YellowsNRoses
+						else:DarkGrayGreen
+
+attr H80Colors 		=	
+						
+						22.5%: lightGray
+						20%: DarkGray
+						35%: GrayishBlue
+						5%: Bordeauxes
+						5%: White
+						5%: YellowsNRoses
+						5%: Darkblue
+						else: DarkGrayGreen
+
+/*
+attr dunkelgelb 						= "#E0D580"
+attr hellgrau							= "#D6D6D6"
+attr hellblau							= "#AAC4D8"
+attr dunkelrot							= "#"
+*/
+#----------------------------------------------------------------------------Setbacks
+attr frontSetback						= 3.5
+attr backSetback						= 3.5
+attr backSetback1						= 1
+attr sideSetback						= 2
+attr FamilyFrontSetback					= rand(5,7)
+attr FamilyBackSetback					= rand(2,3)
+attr FamilySideSetback					= rand(2,6)
+const setbackdistances = comp(fe) {street.front : frontSetback | street.back = backSetback | street.side = sideSetback}
+const setbackdistances2 = comp(fe) {street.front : frontSetback | street.back = backSetback1 | street.side = sideSetback}
+const setbackdistances3 = comp(fe) {street.front : FamilyFrontSetback | street.back = FamilyBackSetback | street.side = FamilySideSetback}
+const setbackdistances4FamHouse = comp(fe) {street.front : 1 | street.back = 1 | street.side = 1}
+attr scopeRandomizer					= rint(rand(0,4))
+
+#----------------------------------------------------------------------------Other
+
+
+
+
+#Geometries-------------------------------------------------------------------------
+
+
+
+
+#Fenster,-türen
+const Fenster3Tuere						= "Fenster,-türen/3FensterBDoor.LOD.glb"
+const Fenster2Tuere						= "Fenster,-türen/2FensterBDoor.LOD.glb"
+const Fenster1Tuere						= "Fenster,-türen/1FensterBDoor.LOD.glb"
+
+const Fenster1							= "Fenster,-türen/Window1.LOD.glb"
+const Fenster2							= "Fenster,-türen/Window2.LOD.glb"
+const Fenster3							= "Fenster,-türen/Window3.LOD.glb"
+
+const Kuechenfenster					= "Fenster,-türen/Kuechenfenster.LOD.glb"
+const Kellerfenster						= "Fenster,-türen/KellerWindow.LOD.glb"
+
+
+
+#FensterAccessoires
+const FensterladenLinks					= "FensterAccessoires/FensterladenLowPoly.glb"
+const FensterladenRechts				= "FensterAccessoires/FensterladenLowPolyRechts.glb"
+
+const StorenD							= "FensterAccessoires/Storen.D.glb"
+const StorenM							= "FensterAccessoires/Storen.M.glb"
+const StorenU							= "FensterAccessoires/Storen.U.glb"
+
+
+####Textures
+
+
+#InsideWindowVariation
+const vorhang							= "Textures/vorhang.jpg"
+const vorhang2							= "Textures/vorhang2.jpg"
+const vorhang3							= "Textures/vorhang3.jpg"
+const vorhangO							= "Textures/vorhangOrange.jpg"
+const vorhang2O							= "Textures/vorhang2Orange.jpg"
+const vorhang3O							= "Textures/vorhang3Orange.jpg"
+const vorhangB							= "Textures/vorhangBlue.jpg"
+const vorhang2B							= "Textures/vorhang2Blue.jpg"
+const vorhang3B							= "Textures/vorhang3Blue.jpg"
+const vorhangG							= "Textures/vorhangGreen.jpg"
+const vorhang2G							= "Textures/vorhang2Green.jpg"
+const vorhang3G							= "Textures/vorhang3Green.jpg"
+const noVorhang							= "Textures/noVorhang.jpg"
+const whityy							= "Textures/halfKTextureWhite.png"
+//const interior1							= "Textures/interior1.png"
+//const Treppenhaus						= "Textures/Treppenhaus.png"
+
+#Wall
+const dryWall1Col			= "Textures/Drywall5.png"
+const dryWall1Nor			= "Textures/Drywall5.normal.png"
+const dryWall1Met			= "Textures/Drywall5.metallic.png"
+const dryWall1Rog			= "Textures/Drywall5.roughness.png"
+
+const dryWall2Col			= "Textures/DryWallPlus.png"
+const dryWall2Nor			= "Textures/DryWallPlus.normal.png"
+const dryWall2Met			= "Textures/DryWallPlus.metallic.png"
+const dryWall2Rog			= "Textures/DryWallPlus.roughness.png"
+
+const wabenCol				= "Textures/Waben.color.png"
+const wabenNor				= "Textures/Waben.normal.png"
+//const wabenHei				= "Textures/"
+
+const mplatCol				= "Textures/Musterplatte.color.png"
+const mplatNor				= "Textures/Musterplatte.normal.png"
+
+const platCol				= "Textures/Platte.color.png"
+const platNor				= "Textures/Platte.normal.png"
+
+const platMet				= "Textures/PlattenTextur.metallic.png"
+const platRog				= "Textures/PlattenTextur.roughness.png"
+
+const asphalt1Col			= "Textures/asphalt1.png"
+const asphalt1Nor			= "Textures/asphalt1.normal.png"
+const asphalt1Met			= "Textures/asphalt1.metallic.png"
+const asphalt1Rog			= "Textures/asphalt1.roughness.png"
+
+const asphalt2Col			= "Textures/asphalt2.png"
+const asphalt2Nor			= "Textures/asphalt2.normal.png"
+const asphalt2Met			= "Textures/asphalt2.metallic.png"
+const asphalt2Rog			= "Textures/asphalt2.roughness.png"
+
+const BMetCol				= "Textures/BrushedMetal.png"
+const BMetNor				= "Textures/BrushedMetal.normal.png"
+const BMetMet				= "Textures/BrushedMetal.metallic.png"
+const BMetRog				= "Textures/BrushedMetal.roughness.png"
+
+#Roof
+const roof1Col				= "Textures/roof1.jpg"
+const roof1Nor				= "Textures/roof1.normal.jpg"
+const roof1Hei				= "Textures/roof1.bumpmap.jpg"
+
+#Wood
+const wood1Col				= "Textures/WoodFloor040_2K_Color.png"
+const wood1Nor				= "Textures/WoodFloor040_2K_Normal.png"
+const wood1Rog				= "Textures/WoodFloor040_2K_Roughness.png"
+const wood1Hei				= "Textures/WoodFloor040_2K_Displacement.png"
+
+const wood2Col				= "Textures/wood.png"
+const wood2Nor				= "Textures/wood.normal.png"
+const wood2Met				= "Textures/wood.metallic.png"
+const wood2Rog				= "Textures/wood.roughness.png"
+
+const inxe1 = 42
+const inxe2 = 0
+const inxe3 = 0
+const inxe4 = 12
+const inxe5 = 12
+const inxe6 = 0	
+const inxe7 = 2
+const inxe8 = 0
+
+Vorhang(windowIndex) --> 
+		case windowIndex == 1:	comp(f){inxe1+0= VorhangColor|inxe1+1= VorhangColor| all= cleanupGeometry(all, cleanupFactor) W.}
+		case windowIndex == 2:	comp(f){inxe2+0 = VorhangColor | inxe2+1 = VorhangColor |inxe2+2 = VorhangColor | inxe2+3 = VorhangColor | all= cleanupGeometry(all, cleanupFactor) W.}
+		case windowIndex == 3:	comp(f){inxe3+0= VorhangColor| inxe3+1= VorhangColor |inxe3+2= VorhangColor | inxe3+3= VorhangColor |inxe3+4= VorhangColor |inxe3+5= VorhangColor | all= cleanupGeometry(all, cleanupFactor) W.}
+		case windowIndex == 4:	comp(f){inxe4+0= VorhangColor|inxe4+1= VorhangColor| all= cleanupGeometry(all, cleanupFactor) W.}
+		case windowIndex == 5:	comp(f){inxe5+0 = VorhangColor | inxe5+1 = VorhangColor |inxe5+2 = VorhangColor | inxe5+3 = VorhangColor | all= cleanupGeometry(all, cleanupFactor) W.}
+		case windowIndex == 6:	comp(f){inxe6+0=rotateUV(0,180) VorhangColor| inxe6+1=rotateUV(0,180) VorhangColor |inxe6+2= VorhangColor | inxe6+3= VorhangColor |inxe6+4= rotateUV(0,180)VorhangColor |inxe6+5=rotateUV(0,180) VorhangColor | all=cleanupGeometry(all, cleanupFactor) W.}
+		case windowIndex == 7:  comp(f){inxe7+0= VorhangColor | inxe7+1= VorhangColor | inxe7+2= VorhangColor | inxe7+3= VorhangColor | all=cleanupGeometry(all, cleanupFactor) W.}
+		case windowIndex == 8:	comp(f){inxe8+0= VorhangColor |inxe8+1= VorhangColor |inxe8+2= VorhangColor |inxe8+3= VorhangColor |inxe8+4= VorhangColor |inxe8+5= VorhangColor | all= cleanupGeometry(all, cleanupFactor) W.} //kellerfenster
+		else: NIL
+
+VorhangColor --> rotateUV(0,180) VorhangColor1
+VorhangColor1-->
+
+/*
+		25%: set(material.colormap, vorhang) ColorChange 
+		25%: set(material.colormap, vorhang2) ColorChange
+		25%: set(material.colormap, vorhang3) ColorChange
+*/
+
+
+		7.6%: set(material.colormap, vorhang) W.
+		7.6%: set(material.colormap, vorhang2) W.
+		7.6%: set(material.colormap, vorhang3) W.
+		7.6%: set(material.colormap, vorhangO) W.
+		7.6%: set(material.colormap, vorhang2O) W.
+		7.6%: set(material.colormap, vorhang3O) W.
+		7.6%: set(material.colormap, vorhangB) W.
+		7.6%: set(material.colormap, vorhang2B) W.
+		7.6%: set(material.colormap, vorhang3B) W.
+		7.6%: set(material.colormap, vorhangG) W.
+		7.6%: set(material.colormap, vorhang2G) W.
+		7.6%: set(material.colormap, vorhang3G) W.
+		else: set(material.colormap, noVorhang) W./*ColorChange*/
+
+
+const Balcony3Indexes = 1316
+const Balcony4Inxexes = 202
+attr cleanupFactor = 0.01
+/*
+ColorChange --> 
+color(AllWColors)
+//color(colorHSVToHex(rand(0,359), rand(0,0.175), rand(0.45,1))) cleanupGeometry(all, cleanupFactor) W.
+*/
+BalconyColor(inx, colory) -->
+case inx==1 : comp(f){0= BalconyColorBeton(colory) |1= BalconyColorBeton(colory) |2= BalconyColorBeton(colory) |3= BalconyColorBeton(colory) |4= BalconyColorBeton(colory) |5= BalconyColorBeton(colory) |6= BalconyColorBeton(colory) |7= BalconyColorBeton(colory) |8= BalconyColorBeton(colory) |9= BalconyColorBeton(colory) |10= BalconyColorBeton(colory) |11= BalconyColorBeton(colory) | all=  cleanupGeometry(all, cleanupFactor) B.}
+case inx==2 : comp(f){2= H60BalconyColorPlatten |3= H60BalconyColorPlatten |6= H60BalconyColorPlatten |7= H60BalconyColorPlatten |14= H60BalconyColorPlatten |
+15= H60BalconyColorPlatten |18= H60BalconyColorPlatten |19= H60BalconyColorPlatten |26= H60BalconyColorPlatten |27= H60BalconyColorPlatten |30= H60BalconyColorPlatten |
+31= H60BalconyColorPlatten |38= H60BalconyColorPlatten |39= H60BalconyColorPlatten |42= H60BalconyColorPlatten |43= H60BalconyColorPlatten |62= H60BalconyColorPlatten |
+63= H60BalconyColorPlatten |66= H60BalconyColorPlatten |67= H60BalconyColorPlatten |51= H60BalconyColorPlatten |55= H60BalconyColorPlatten |54= H60BalconyColorPlatten |
+50= H60BalconyColorPlatten |72= BalconyColorBeton(colory) |73= BalconyColorBeton(colory) |74= BalconyColorBeton(colory) |75= BalconyColorBeton(colory) |76= BalconyColorBeton(colory) |77= BalconyColorBeton(colory) |
+78= BalconyColorBeton(colory) |79= BalconyColorBeton(colory) |80= BalconyColorBeton(colory) |81= BalconyColorBeton(colory) |82= BalconyColorBeton(colory) |83= BalconyColorBeton(colory) | all= cleanupGeometry(all, cleanupFactor) B.}
+case inx==3 : comp(f){Balcony3Indexes= BalconyColorBeton(colory) |Balcony3Indexes+1= BalconyColorBeton(colory) |Balcony3Indexes+2= BalconyColorBeton(colory) |Balcony3Indexes+3= BalconyColorBeton(colory) |Balcony3Indexes+4= BalconyColorBeton(colory) |Balcony3Indexes+5= BalconyColorBeton(colory) |Balcony3Indexes+6= BalconyColorBeton(colory) |Balcony3Indexes+7= BalconyColorBeton(colory) 
+|Balcony3Indexes+8= BalconyColorBeton(colory) |Balcony3Indexes+9= BalconyColorBeton(colory) |Balcony3Indexes+10= BalconyColorBeton(colory) |Balcony3Indexes+11= BalconyColorBeton(colory) | all= B.}
+case inx==4 : comp(f){Balcony4Inxexes+2 = BalconyColorBeton(colory)|Balcony4Inxexes+3= BalconyColorBeton(colory)|Balcony4Inxexes+4= BalconyColorBeton(colory)|Balcony4Inxexes+5= BalconyColorBeton(colory)|Balcony4Inxexes+6= BalconyColorBeton(colory)|Balcony4Inxexes+7= BalconyColorBeton(colory)|Balcony4Inxexes+8= BalconyColorBeton(colory)|Balcony4Inxexes+9= BalconyColorBeton(colory)|Balcony4Inxexes+10= BalconyColorBeton(colory)|
+Balcony4Inxexes+11= BalconyColorBeton(colory)|Balcony4Inxexes+12= BalconyColorBeton(colory)|Balcony4Inxexes+13= BalconyColorBeton(colory)|Balcony4Inxexes+14= BalconyColorBeton(colory)|Balcony4Inxexes+15= BalconyColorBeton(colory)|Balcony4Inxexes+16= BalconyColorBeton(colory)|Balcony4Inxexes+17= BalconyColorBeton(colory)|Balcony4Inxexes+18= BalconyColorBeton(colory)|Balcony4Inxexes+19= BalconyColorBeton(colory)|Balcony4Inxexes+20= BalconyColorBeton(colory)|
+Balcony4Inxexes+21= BalconyColorBeton(colory)|Balcony4Inxexes+22= BalconyColorBeton(colory)|Balcony4Inxexes+23= BalconyColorBeton(colory)|Balcony4Inxexes+24= BalconyColorBeton(colory)|Balcony4Inxexes+25= BalconyColorBeton(colory)|Balcony4Inxexes+26= BalconyColorBeton(colory)|Balcony4Inxexes+27= BalconyColorBeton(colory)|Balcony4Inxexes+28= BalconyColorBeton(colory)|Balcony4Inxexes+29= BalconyColorBeton(colory)|Balcony4Inxexes+30= BalconyColorBeton(colory)|
+Balcony4Inxexes+31= BalconyColorBeton(colory)|Balcony4Inxexes+32= BalconyColorBeton(colory)|Balcony4Inxexes+33= BalconyColorBeton(colory)|Balcony4Inxexes+34= BalconyColorBeton(colory)|Balcony4Inxexes+35= BalconyColorBeton(colory)|Balcony4Inxexes+36= BalconyColorBeton(colory)|Balcony4Inxexes+37= BalconyColorBeton(colory)|Balcony4Inxexes+38= BalconyColorBeton(colory)|Balcony4Inxexes+39= BalconyColorBeton(colory)| all= cleanupGeometry(all, cleanupFactor) B.}
+else: NIL
+H60BalconyColorPlatten --> color(H60Colors) cleanupGeometry(all, cleanupFactor) B.
+BalconyColorBeton(colory) --> color(colory) cleanupGeometry(all, cleanupFactor) B.
+
+StorenTile(windowIndex, spX, spY, colora) -->
+case windowIndex ==1: 55%:		NIL
+	15%:	s('1,rand(0.1,0.75),0) translate(rel, scope, 0, spY-scope.sy, -0.005) i(StorenU) color(colorHSVToHex(colorHexToH(colora)-190, colorHexToS(colora)-0.15, colorHexToV(colora)-0.25)) storen.
+	15%:	s('1,rand(1.2,2),0) translate(rel, scope, 0, spY-scope.sy, -0.005) i(StorenM) color(colorHSVToHex(colorHexToH(colora)-190, colorHexToS(colora)-0.15, colorHexToV(colora)-0.25)) storen.
+	else:	s('1,rand(2,3),0) translate(rel, scope, 0, spY-scope.sy, -0.005) i(StorenD) color(colorHSVToHex(colorHexToH(colora)-190, colorHexToS(colora)-0.15, colorHexToV(colora)-0.25)) storen.
+case windowIndex ==2:
+	55%:		NIL
+	15%:	s('1,rand(0.1,0.5),0) translate(rel, scope, 0, spY-scope.sy, -0.005) i(StorenU) color(colorHSVToHex(colorHexToH(colora)-190, colorHexToS(colora)-0.15, colorHexToV(colora)-0.25)) storen.
+	15%:	s('1,rand(0.75,1.3),0) translate(rel, scope, 0, spY-scope.sy, -0.005) i(StorenM) color(colorHSVToHex(colorHexToH(colora)-190, colorHexToS(colora)-0.15, colorHexToV(colora)-0.25)) storen.
+	else:	s('1,rand(1.5,2),0) translate(rel, scope, 0, spY-scope.sy, -0.005) i(StorenD) color(colorHSVToHex(colorHexToH(colora)-190, colorHexToS(colora)-0.15, colorHexToV(colora)-0.25)) storen.
+case windowIndex ==3:
+	s('0.333,'0.9,'1)i(FensterladenLinks) t(-scope.sx,'0.05,0.003) color(colorHSVToHex(colorHexToH(colora)-185, colorHexToS(colora), colorHexToV(colora))) l.
+	i(FensterladenRechts) t(spX+scope.sx,0,0) color(colorHSVToHex(colorHexToH(colora)-185, colorHexToS(colora), colorHexToV(colora))) r.
+	
+	/*
+	color(colorHSVToHex(colorHexToH(colora)-190, colorHexToS(colora)-0.25, colorHexToV(colora)-0.15)
+	15%:	s('0.98,rand(0.1,0.5),0) translate(rel, scope, 0.01, spY-scope.sy, -0.045) i(FensterladenLinks) cleanupGeometry(edges, 0) storen.
+	15%:	s('0.98,rand(0.75,1.3),0) translate(rel, scope, 0.01, spY-scope.sy, -0.045) i(FensterladenLinks) cleanupGeometry(edges, 0) storen.
+	else:	s('0.98,rand(1.5,2),0) translate(rel, scope, 0.01, spY-scope.sy, -0.045) i(FensterladenLinks) cleanupGeometry(edges, 0) storen.
+*/
+else: NIL
+
+
+Blaech -->
+comp(f) { 
+        all : 
+        	
+            //setupProjection(0, scope.xy, 1 dont do it it doesnt work, 1) 
+            projectUV(0)
+            set(material.colormap, BMetCol)
+            set(material.normalmap, BMetNor)
+            set(material.metallicmap, BMetMet)
+            set(material.roughnessmap, BMetRog)            
+            scaleUV(0,1,1)
+            cleanupGeometry(all, cleanupFactor) Tex.
+        }	
+        
+        
+ZiegelRoof -->
+
+comp(f) { 
+        all : 
+            setupProjection(0, scope.xy, 6	, 6) 
+            projectUV(0)
+            set(material.colormap, roof1Col)
+            set(material.normalmap, roof1Nor)
+            set(material.bumpmap, roof1Hei)
+            set(material.dirtmap, "Textures/dirty2.png")
+            cleanupGeometry(all, cleanupFactor) Tex.
+        }
+
+
+RoofSide --> 
+
+comp(f) {
+        all :
+            setupProjection(0, scope.xy, 2.25	, 2.25) 
+            projectUV(0)
+            set(material.colormap, wood2Col)
+            set(material.roughnessmap, wood2Rog)
+            set(material.normalmap, wood2Nor)
+            set(material.metallicmap, wood2Met)
+            rotateUV(0, 90)
+            cleanupGeometry(all, cleanupFactor) Tex.
+        }
+
+
+
+RoofUnderSide --> 
+comp(f) {
+        all :
+            setupProjection(0, scope.xy, 2.25	, 2.25) 
+            projectUV(0)
+            set(material.colormap, wood2Col)
+            set(material.roughnessmap, wood2Rog)
+            set(material.normalmap, wood2Nor)
+            set(material.metallicmap, wood2Met)
+            //rotateUV(0,90)
+            cleanupGeometry(all, cleanupFactor) Tex.
+        }
+
+DryWall1 --> 
+comp(f) { 
+        all : 
+        	projectUV(0)
+            set(material.colormap, dryWall1Col)
+            set(material.normalmap, dryWall1Nor)
+            set(material.metallicmap, dryWall1Met)
+            set(material.roughnessmap, dryWall1Rog)      
+            scaleUV(0,0.165,0.165)      
+			cleanupGeometry(all, cleanupFactor) Tex.
+        }
+
+DryWall2 --> 
+comp(f) { 
+        all : 
+        	projectUV(0)
+            set(material.colormap, dryWall2Col)
+            set(material.normalmap, dryWall2Nor)
+            set(material.metallicmap, dryWall2Met)
+            set(material.roughnessmap, dryWall2Rog)      
+            scaleUV(0,0.25,0.25	)      
+			cleanupGeometry(all, cleanupFactor) Tex.
+        }
+        
+                
+Platten --> 
+comp(f) { 
+        all : 
+        	
+            projectUV(0)
+            set(material.colormap, platCol)
+            set(material.normalmap, platNor)
+            scaleUV(0,0.8,0.5)
+            projectUV(1)
+            set(material.metallicmap, platMet)
+            set(material.roughnessmap, platRog)
+            scaleUV(1,0.75,0.75)
+            cleanupGeometry(all, cleanupFactor) Tex.
+        }
+
+ZiegelMusterPlatten -->
+comp(f) { 
+        all : 
+        	
+            projectUV(0)
+            set(material.colormap, mplatCol)
+            set(material.normalmap, mplatNor)
+            scaleUV(0,1.1,1.1)
+			projectUV(1)
+            set(material.metallicmap, platMet)
+            set(material.roughnessmap, platRog)
+            scaleUV(1,0.75,0.75)
+            cleanupGeometry(all, cleanupFactor) Tex.
+		}
+		
+WabenMusterPlatten --> 
+comp(f) { 
+        all : 
+            projectUV(0)
+            set(material.colormap, wabenCol)
+            set(material.normalmap, wabenNor)
+            scaleUV(0,0.6,0.6)
+            projectUV(1)
+            set(material.metallicmap, platMet)
+            set(material.roughnessmap, platRog)
+            scaleUV(1,0.75,0.75)
+            cleanupGeometry(all, cleanupFactor) Tex.
+        }
+
+Asphalt -->
+comp(f) { 
+        all : 
+            projectUV(0)
+            set(material.colormap, asphalt2Col)
+            set(material.normalmap, asphalt2Nor)
+            set(material.metallicmap, asphalt2Met)
+            set(material.roughnessmap, asphalt2Rog)            
+            scaleUV(0,0.4,0.4)
+            cleanupGeometry(all, cleanupFactor) Tex.
+        }	

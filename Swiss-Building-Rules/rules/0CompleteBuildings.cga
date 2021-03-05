@@ -1,0 +1,78 @@
+version "2020.0"
+
+import FH: 		"1FamilyHouse.cga"
+import OH : 	"2OldHouse.cga"
+import H60 : 	"3H60House.cga"
+import H80 : 	"4H80House.cga"
+import NH : 	"5NewHouse.cga"
+import SU : 	"6SetUp.cga"
+
+import FHLO: 		"1FamilyHouseLOD.cga"
+import OHLO : 		"2OldHouseLOD.cga"
+import H60LO : 		"3H60HouseLOD.cga"
+import H80LO : 		"4H80HouseLOD.cga"
+import NHLO : 		"5NewHouseLOD.cga"
+import SULO : 		"6SetUpLOD.cga"
+
+attr LOD = 0
+
+#START
+#-------------------------------------------------------------------------------------------------------------
+Lot --> 					
+
+case LOD ==1 :
+							case (scope.sx < 12 || scope.sz < 12 || (scope.sx < 15 && scope.sz < 15)) : toosmallLot
+							case (geometry.area() < 600) : smallLot
+							case (geometry.area() > 1100): bigLot
+							else : middleLot
+case LOD ==0:				
+							case (scope.sx < 12 || scope.sz < 12 || (scope.sx < 15 && scope.sz < 15)) : toosmallLot
+							case (geometry.area() < 600) : smallLot0
+							case (geometry.area() > 1100): bigLot0
+							else : middleLot0
+else: NIL
+
+
+toosmallLot -->				NIL
+
+
+smallLot --> 				75% : FH.FamilyHouseStart
+							25% : OH.OldHouseStart
+							else: NIL
+							
+middleLot -->				1% : FH.FamilyHouseStart
+							14% : OH.OldHouseStart
+							37% : H60.H60iesStart
+							34% : H80.H80iesStart
+							14% : NH.NewHouseStart
+							else: NIL
+				
+bigLot -->
+							25% : H60.H60iesStart
+							31% : H80.H80iesStart
+							14% : OH.OldHouseStart
+							30% : NH.NewHouseStart
+							else: NIL
+							
+LotInner --> Lot
+
+
+
+smallLot0 --> 				75% : FHLO.FamilyHouseStart
+							25% : OHLO.OldHouseStart
+							else: NIL
+							
+middleLot0 -->				1% : FHLO.FamilyHouseStart
+							14% : OHLO.OldHouseStart
+							37% : H60LO.H60iesStart
+							34% : H80LO.H80iesStart
+							14% : NHLO.NewHouseStart
+							else: NIL
+				
+bigLot0 -->
+							25% : H60LO.H60iesStart
+							31% : H80LO.H80iesStart
+							14% : OHLO.OldHouseStart
+							30% : NHLO.NewHouseStart
+							else: NIL
+							

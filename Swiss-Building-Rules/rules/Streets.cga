@@ -1,0 +1,61 @@
+/**
+ * File:    Streets.cga
+ * Created: 17 Nov 2020 15:02:42 GMT
+ * Author:  Luca
+ */
+version "2020.0"
+
+
+const AC			= "Textures/Asphalt003_2K_Color.jpg"
+const AAO			= "Textures/Asphalt003_2K_AmbientOcclusion.jpg"
+const AD			= "Textures/Asphalt003_2K_Displacement.jpg"
+const AN			= "Textures/Asphalt003_2K_Normal.jpg"
+const AR			= "Textures/Asphalt003_2K_Roughness.jpg"
+
+
+
+Street --> translate(rel, world, 0,-0.65,0) extrude(world.up, 0.5) StreetTex2
+Crossing --> Street
+Sidewalk --> translate(rel, world, 0,-0.65,0) extrude(world.up, 0.65) StreetTex
+
+StreetTex --> 
+
+comp(f) { world.up: 
+setupProjection(0,world.xz,2,2)
+projectUV(0)
+            set(material.colormap, AC)
+            set(material.normalmap, AN)
+            set(material.metallicmap, AAO)
+            set(material.roughnessmap, AR)            
+            //scaleUV(0,1,1)
+            Tex.
+        |all:
+            projectUV(0)
+            set(material.colormap, AC)
+            set(material.normalmap, AN)
+            set(material.metallicmap, AAO)
+            set(material.roughnessmap, AR)            
+            scaleUV(0,1,1)
+            Tex.
+        }	
+        
+        StreetTex2 --> color(0.6,0.6,0.6)
+
+comp(f) { world.up: 
+setupProjection(0,world.xz,2,2)
+projectUV(0)
+            set(material.colormap, AC)
+            set(material.normalmap, AN)
+            set(material.metallicmap, AAO)
+            set(material.roughnessmap, AR)            
+            //scaleUV(0,1,1)
+            Tex.
+        |all:
+            projectUV(0)
+            set(material.colormap, AC)
+            set(material.normalmap, AN)
+            set(material.metallicmap, AAO)
+            set(material.roughnessmap, AR)            
+            scaleUV(0,1,1)
+            Tex.
+        }	

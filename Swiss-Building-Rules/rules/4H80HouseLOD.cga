@@ -1,0 +1,169 @@
+import SULO : 	"6SetUpLOD.cga"
+
+attr height1 = rint(rand(2,6))
+attr height2 = rint(rand(4,9))
+
+attr H80iesBuildingHeight				= 	75%:	(height2*H80iesFloor_height)+1
+											else:	(height1*H80iesFloor_height)+1
+attr H80iesLshape1value					= rand(10, 30)
+attr H80iesLshape2value					= rand(8, 25)
+attr H80iesGroundfloor_height 			= H80iesFloor_height
+attr H80iesFloor_height 				= rand(2.5,3)
+attr H80iesTile_side					= 0.5
+attr H80iesTile_width1 					= rand(5, 10)
+attr H80iesTile_width2 					= rand(4, 14)
+attr H80iesTile_width3 					= rand(7, 11)
+attr H80iesTile_width4 					= rand(4, 14)
+attr H80iesTile_width5 					= rand(3.75, 14)
+attr H80iesDoor_width					= 4.5
+
+const abei								= 	70% :1 
+											else: rint(rand(1,3)) 
+const cleanupFactor						= 0.01
+
+H80iesStart --> 			//color("#F1F1F1")
+							setback(SULO.setbackdistances){street.front : NIL | street.back : NIL | street.side : NIL | remainder : H80Lot2}
+
+H80Lot2-->					alignScopeToAxes()
+							rotateScope(rint(rand(0,4))*90,0,0)
+							innerRectangle(edge){shape = H80Lot3 | remainder = NIL }
+
+H80Lot3 -->					shapeL(H80iesLshape1value, H80iesLshape2value){shape : H80Shape | remainder : NIL}
+													
+H80Shape -->	 			alignScopeToAxes()
+							extrude(H80iesBuildingHeight)
+							comp(f){top: H80Roof | street.front : H80Facade(scope.sx, 1) | street.left : H80Facade(scope.sx, 2) | street.right : H80Facade(scope.sx, 3) | street.back : H80Facade(scope.sx, 4)}
+							
+							//comp(f){top: H80Roof | street.front: H80FrontWall(scope.sx , scope.sz, "1") | street.right: H80DoorFacade(scope.sx, scope.sz, "2") | side: H80SideFacade(scope.sx, scope.sz, "3")}
+							
+							
+H80Roof --> 				setback(1){all= H80Gable1 | remainder = H80Gable2}
+H80Gable1 -->				extrude(1.5) split(y){~1: H80RoofGable7 |~1: H80RoofGable8 }
+H80Gable2 -->				setback(1) {all : H80Gable3 | remainder = H80Gable4}
+H80Gable4 --> 				innerRectangle(edge){shape : H80Gable5 | remainder: H80Gable3 }
+H80Gable5 --> 				split(x){~1 : split(y){~1 : H80Gable6 | ~3.75 : H80Gable3} | ~3.75 : H80Gable3}
+H80Gable6 --> 				extrude(3) color(SULO.Grays) SULO.Asphalt
+H80Gable3 -->				cleanupGeometry(edges,0.11) normalizeUV(0, u, collectiveAllFaces) color(SULO.Grays) SULO.Asphalt
+
+H80RoofGable7-->	H80Wall
+H80RoofGable8-->	SULO.Blaech 
+
+
+
+H80Facade(scpX, inx) -->
+
+			split(y){ 1: H80Floor(split.index, split.total, scpX, inx) | H80iesGroundfloor_height    : H80Floor(split.index, split.total, scpX, inx)
+			| {~H80iesFloor_height : H80Floor(split.index, split.total, scpX, inx) }* }
+							
+
+H80Floor(floorIndex, floorTotal, scpX, inx) -->
+case scpX < 8: 	
+		split(x){
+			{H80iesTile_side : H80Wall } 
+			| { ~H80iesTile_width1 : H80Tile(floorIndex, floorTotal, split.index) }*
+			| { ~H80iesTile_width2 : H80Tile(floorIndex, floorTotal, split.index) }* 
+			| {~H80iesTile_side : H80Wall }
+			}
+else:
+	case inx == abei:
+	split(x){
+			{H80iesTile_side : H80Wall } 
+			| { ~H80iesTile_width1 : H80Tile(floorIndex, floorTotal, split.index) }*
+			| { ~H80iesDoor_width : H80Door(floorIndex, floorTotal, split.index)}
+			| { ~H80iesTile_width2 : H80Tile(floorIndex, floorTotal, split.index) }* 
+			| {~H80iesTile_side : H80Wall }
+			}
+	else: 
+		split(x){
+			{H80iesTile_side : H80Wall } 
+			| { ~H80iesTile_width1 : H80Tile(floorIndex, floorTotal, split.index) }*
+			| { ~H80iesTile_width2 : H80Tile(floorIndex, floorTotal, split.index) }* 
+			| {~H80iesTile_side : H80Wall }
+			}
+
+
+
+
+
+H80Tile(floorIndex, floorTotal, splitInx2) --> 
+	case (floorIndex == 0 && splitInx2 % 2 == 1 ): H80Wall
+	case (floorIndex == 0 && splitInx2 % 2 == 0 ): 
+	
+		case scope.sx < 3 :
+			split(x){ ~1 : H80Wall 
+			|  2 : H80KWindow1(floorIndex, floorTotal, splitInx2) /*SULO.StorenTile(2, scope.sx,scope.sy, SULO.H80Colors)*/
+			| ~1 : H80Wall }		 
+			else :
+			split(x){ ~1 : H80Wall 
+			|  4 : H80KWindow1(floorIndex, floorTotal, splitInx2) /*SULO.StorenTile(2, scope.sx,scope.sy, SULO.H80Colors)*/
+			| ~1 : H80Wall }
+	
+	case scope.sx < 1 : H80Wall
+	case scope.sx < 3 :
+	split(x){ ~1 : H80Wall 
+			|  2 : split(y){ 0.7: H80Wall | 2: H80Window1(floorIndex, floorTotal, splitInx2) SULO.StorenTile(2, scope.sx,scope.sy, SULO.H80Colors)| ~1: H80Wall }
+			| ~1 : H80Wall }		 
+	case scope.sx > 10 :
+	split(x){ ~1 : H80Wall 
+			|  8 : split(y){ ~0.1: H80Wall |3.5: H80Balcony(floorIndex, floorTotal, splitInx2) | ~0.1: H80Wall }
+			| ~1 : H80Wall }
+	else :
+	split(x){ ~1 : H80Wall 
+			|  4 : split(y){ 0.7: H80Wall | 2: H80Window1(floorIndex, floorTotal, splitInx2) SULO.StorenTile(2, scope.sx,scope.sy, SULO.H80Colors)| ~1: H80Wall }
+			| ~1 : H80Wall }
+
+
+H80Window1(floorIndex, floorTotal, splitInx2) -->
+
+		s('1,'1,0)
+		i(SULO.Fenster3)t(0,0,-0.02) SULO.Vorhang(6)
+
+H80KWindow1(floorIndex, floorTotal, splitInx2) -->
+H80Wall
+
+H80Balcony(floorIndex, floorTotal, splitInx2) -->
+					case (floorIndex == 0) : H80Wall
+					else :
+					H80Bkn1
+				 	
+H80Bkn1 -->				split(x)	{ ~0.5 : H80Wall
+									| ~0.8 : split(y) { 0.15 : H80Wall | 2.2: H80Bkn2 SULO.StorenTile(1, scope.sx,scope.sy, SULO.H80Colors) | ~1 : H80Wall}
+									| ~0.5 : H80Wall }
+H80Bkn2 -->			s('1,'1,0.1) i(SULO.Fenster3Tuere)t(0,0,-0.02) SULO.Vorhang(3)
+
+
+
+
+ H80Door(floorIndex, floorTotal, splitInx2) -->
+H80Wall
+/*	case (floorIndex == 0) : NIL
+	case (floorIndex == 1) : 
+		case scope.sx < 4 : 
+			set(trim.vertical, false)
+			s('1, '1.43, 3.085)
+ 			i(SULO.CompEingang2) cleanupGeometry(all, cleanupFactor)
+ 			
+		else:
+			set(trim.vertical, false)
+			s('1, '1.43, 3.085)
+ 			i(SULO.CompEingang1) cleanupGeometry(all, cleanupFactor)
+ 			
+	else:
+	set(trim.vertical, false)
+	s('1, '1, 1.575)
+	t(0,0,-1.5)
+	i(SULO.Lichtgang) cleanupGeometry(all, cleanupFactor)
+ */
+
+
+const wallsy =	15%: 1
+				30%: 2
+				30%: 3
+				else: 4
+
+H80Wall --> H80Wall(wallsy)
+H80Wall(wallsy) -->			case wallsy == 1: color(SULO.H80Colors) SULO.DryWall1
+							case wallsy == 2: color(SULO.H80Colors) SULO.Platten
+							case wallsy == 3: color(SULO.H80Colors) SULO.WabenMusterPlatten
+							case wallsy == 4: color(SULO.H80Colors) SULO.ZiegelMusterPlatten
+							else : NIL

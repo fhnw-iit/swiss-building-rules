@@ -1,0 +1,155 @@
+import SU : 	"6SetUp.cga"
+
+attr height1		= rint(rand(2,3))
+attr height2		= rint(rand(2,5))
+
+attr oldHouseBuildingHeight				= 	75%:	height1*OldHouseFloor_height
+											else:	height2*OldHouseFloor_height
+attr oldHouseShape1value				= rand (6,21)
+attr oldHouseShape2value				= rand (5, 15)
+attr oldHouseShape3value				= rand (7, 13)
+attr oldHouseShape4value				= rand (6, 13)
+attr OldHouseGable1						= rand(55,60)
+attr OldHouseGable2						= rand(35,45)
+attr OldHouseFloor_height				= rand(2.3,3)
+attr OldHouseSideW						= 0.5
+attr OldHouseTile1						= rand(2,3)
+attr OldHouseTile2						= rand(3,5)
+attr OldHouseTile3						= rand(5,8)
+
+const cleanupFactor						= 0.01
+
+//const abei								= 1
+OldHouseStart -->			//color(0,1,0) /
+
+//Grün
+							setback(SU.setbackdistances2){all = NIL | remainder = shapeO(oldHouseShape1value,oldHouseShape2value,oldHouseShape3value,oldHouseShape4value){shape: alignScopeToGeometry(yUp,largest, longest) OldHouseStart0 | remainder: NIL}}
+OldHouseStart0 -->			extrude(oldHouseBuildingHeight) OldHouseStart01
+
+OldHouseStart01-->			comp(f){street.front : OldHouseSide1(scope.sx, 1) | street.right : OldHouseSide1(scope.sx, 2) | street.left : OldHouseSide1(scope.sx, 3) | street.back : OldHouseSide1(scope.sx, 4) | top = OldHouseLot1}
+				
+OldHouseLot1 -->			case scope.sx < 16 || scope.sz < 16 : splitArea(x){ '(1/(rint(rand(1,2)))): OldHouseLot2}*
+							else : alignScopeToGeometry(yUp,largest, longest) splitArea(x){ '(1/(rint(rand(2,scope.sx/15)))): OldHouseLot2}*
+OldHouseLot2 -->			case scope.sx < 12 || scope.sz < 12: alignScopeToGeometry(yUp,largest, longest) splitArea(x){ '(1/(rint(rand(1,3)))): OldHouseLot3}*
+							else: alignScopeToGeometry(yUp,largest, longest) splitArea(x){ '(1/(rint(rand(2,scope.sx/15)))): OldHouseLot3}*
+OldHouseLot3 -->			convexify(1)  OldHouseLot4
+OldHouseLot4 -->			case scope.sx >= 1 && scope.sy >= 1 : NIL
+							else: extrude(rand(0,10)) /**cleanupGeometry(all, 0.38)*/ comp(f){street.front : OldHouseSide2(scope.sx, 1) | street.right : OldHouseSide2(scope.sx, 2) | street.left : OldHouseSide2(scope.sx, 3) | street.back : OldHouseSide2(scope.sx, 4) | top = OldHouseRoof1}
+
+//ROOF
+OldHouseRoof1 --> 	 	    alignScopeToGeometry(yUp, largest, 0)
+							roofGable(OldHouseGable1, 0 /**0.75*/, 0) split(y) {~2 : OldHouseRoof2 | ~2: NIL }
+							comp(e){eave: OHRoofEave}
+OHRoofEave -->				i(SU.Drain, zUp, alignSizeAndPosition) s('0.98,0.3, -0.2) r(OldHouseGable1,0,0) t('0.01,0.0,0.25) cleanupGeometry(all, cleanupFactor) X. //OldHouseGable1
+							
+OldHouseRoof2 -->			comp(f) {aslant = OldHouseRoof3 | horizontal = HozoOldHouseRoof3 | vertical : OldHouseSide2(scope.sx, 5)}
+HozoOldHouseRoof3 -->		comp(f){world.up : OldHouseRoof3}
+OldHouseRoof3 -->			extrude(world.up, 0.3)	comp(f){ vertical: RoofSide | aslant: OldHouseRoof5 | horizontal: OldHouseRoof4}
+OldHouseRoof4 -->			comp(f){world.up : roofHip(OldHouseGable2) OldHouseRoof5}
+OldHouseRoof5 -->			color(SU.rot) SU.ZiegelRoof
+
+RoofSide -->				color(SU.brown) SU.RoofSide
+
+
+OldHouseSide2(scpX, inx) --> 	case inx ==5: innerRectangle(scope){ shape : OldHouseSide2(scope.sx, 4) | remainder : OHWall }
+								else: split(y){OldHouseFloor_height: OHFloor(split.index+4, split.total+4, scope.sx, inx)
+			| {~OldHouseFloor_height : OHFloor(split.index+4, split.total+4, scope.sx, inx) }* }
+OldHouseSide1(scpX, inx) --> 	split(y){ 0.5: OHFloor(split.index, split.total, scope.sx, inx) | OldHouseFloor_height: OHFloor(split.index, split.total, scope.sx, inx)
+			| {~OldHouseFloor_height : OHFloor(split.index, split.total, scope.sx, inx) }* }
+
+
+OHFloor(floorIndex, floorTotal, scpX, inx) -->
+case scpX < 2 : OHWall
+case scpX < 4 : OHTile(floorIndex, floorTotal, split.index, split.total, inx)
+case scpX < 7.5 && inx == 1 && floorIndex ==1  : split(x) {
+							~1 : OHWall |
+							3 : OHDoor |
+							~1 : OHWall 
+							}
+case scpX < 8: split(x) {
+							~OldHouseTile1 : OHTile(floorIndex, floorTotal, split.index, split.total, inx) |
+							~OldHouseTile2 : OHTile(floorIndex, floorTotal, split.index, split.total, inx)  
+							}*
+				
+else: split(x) {
+				~OldHouseTile1 : OHTile(floorIndex, floorTotal, split.index, split.total, inx) |
+				~OldHouseTile2 : OHTile(floorIndex, floorTotal, split.index, split.total, inx) |
+				~OldHouseTile3 : OHTile(floorIndex, floorTotal, split.index, split.total, inx)
+				}*
+
+OHTile(floorIndex, floorTotal, splitInx, splitTot, inx) -->
+case floorIndex == 0: OHWall
+/**case floorIndex == 1 && splitInx == rint(splitTot/4): OHDoor*/
+case scope.sx < 0.5 || inside() || touches() : OHWall
+case scope.sx < 2.3 :  OHWindowSmall(floorIndex, floorTotal, splitInx, inx)
+case scope.sx < 3.6 :  OHWindowDoppel(floorIndex, floorTotal, splitInx, inx)
+else: 		case inx==1 : 65%: OHBalcony(floorIndex, floorTotal, splitInx, inx)
+			else: OHWindowTripple(floorIndex, floorTotal, splitInx, inx)
+else: OHWindowTripple(floorIndex, floorTotal, splitInx, inx)
+
+const storensy = 75%: 3
+				else: 2
+
+
+OHWindowSmall(floorIndex, floorTotal, splitInx, inx)--> case scope.sy < 1 : OHWall
+															else:
+													case storensy == 2:
+													split(x)	{ ~0.5 : OHWall
+																| ~2 : split(y) { 0.7 : OHWall | 1.5: OHWS  SU.StorenTile(storensy, scope.sx,scope.sy, SU.AllWColors) | ~0.3 : OHWall}
+																| ~0.5 : OHWall }
+													else: 
+																split(x)	{ ~0.5 : OHWall
+																| ~1.49 : split(y) { 0.7 : OHWall | 1.5: OHWS  SU.StorenTile(storensy, scope.sx,scope.sy, SU.AllWColors) | ~0.3 : OHWall}
+																| ~0.5 : OHWall }
+OHWS -->i(SU.Fenster1)t(0,0,-scope.sz+0.12) SU.Vorhang(4)
+
+OHWindowDoppel(floorIndex, floorTotal, splitInx, inx) -->	case scope.sy < 1 : OHWall
+															else:
+
+															case floorIndex == 1 && inx == 1 && splitInx == rint(rand(1,2)) : OHDoor
+															else: 
+																		case storensy ==2 : split(x)	{ ~0.5 : OHWall
+																							| ~2 : split(y) { 0.7 : OHWall | 1.5: OHWD   SU.StorenTile(storensy, scope.sx,scope.sy, SU.AllWColors) | ~0.3 : OHWall}
+																							| ~0.5 : OHWall }
+																		else: split(x)	{ ~0.5 : OHWall
+																							| ~1.49 : split(y) { 0.7 : OHWall | 1.5: OHWD   SU.StorenTile(storensy, scope.sx,scope.sy, SU.AllWColors) | ~0.3 : OHWall}
+																							| ~0.5 : OHWall }
+OHWD --> i(SU.Fenster2) t(0,0,-scope.sz+0.15) SU.Vorhang(5)
+
+OHBalcony(floorIndex, floorTotal, splitInx, inx) --> 		case scope.sy < 1 : OHWall
+															else:
+
+															OHBD
+															s('0.9,1.2,'1) t(0.2,0.02   ,0.01) i(SU.GeschwungenGelaender) SU.BalconyColor(3, SU.AllWColors)
+
+OHBD -->													split(x)		{ ~0.5 : OHWall
+																			| ~0.8 : split(y) { 0.15 : OHWall |2.2: OHBD1  SU.StorenTile(storensy, scope.sx,scope.sy, SU.AllWColors) | ~1 : OHWall}
+																			| ~0.5 : OHWall }
+
+
+OHBD1 -->													s('1,'1,0.1) t(0,0,-0.1) i(SU.Fenster2Tuere) SU.Vorhang(2)
+
+
+OHWindowTripple(floorIndex, floorTotal, splitInx, inx) --> 	split(x)	{ ~0.5 : OHWall
+																		| ~1 : split(y) { 0.5 : OHWall | 2: OHWT  SU.StorenTile(storensy, scope.sx,scope.sy, SU.AllWColors) | ~0.3 : OHWall}
+																		| ~0.5 : OHWall }			
+OHWT --> 		case scope.sy < 1 : i(SU.Fenster3) t(0,0,-scope.sz+0.115) SU.Vorhang(6)
+				else: i(SU.Fenster3) t(0,0,-scope.sz+0.115) SU.Vorhang(6)
+
+
+OHDoor --> 	OHDoor1
+			OHStairs
+
+OHDoor1 -->			split(x)	{ ~0.2 : OHWall
+								| ~1 : split(y) { ~0 : OHWall | ~2: OHDoor2 | ~0.3 : OHWall}
+								| ~1 : OHWall }
+OHDoor2 -->				i(SU.EingangsTuere) t(0,0,(-scope.sz+0.05)) cleanupGeometry(all, cleanupFactor) door.
+			OHBriefkasten(scope.sx)
+OHStairs -->			s('1,2,'1)t(0,-0.7,-0.01)i(SU.TreppeOH) cleanupGeometry(all, cleanupFactor)
+OHBriefkasten(sxp) -->		s(1,1.3,0.3) t(sxp + 0.1,1,0) i(SU.Briefkasten) cleanupGeometry(all, cleanupFactor)
+
+const walsy = 	50%: 1
+				else: 2
+OHWall -->	case walsy == 1 : color(SU.AllWColors)SU.DryWall1
+			else: color(SU.AllWColors)SU.DryWall2
+				

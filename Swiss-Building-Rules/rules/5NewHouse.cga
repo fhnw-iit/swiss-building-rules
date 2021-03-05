@@ -1,0 +1,214 @@
+import SU : 	"6SetUp.cga"
+
+
+attr height1 = rint(rand(2,4))
+attr height2 = rint(rand(2,14))
+
+attr NHBuildingHeight				= 	60%:	(height1*NHFloor_height)+1
+										else:	(height2*NHFloor_height)+1
+attr NHShape1value					= rand(10, 30)
+attr NHShape2value					= rand(8, 25)
+attr NHShape3value					= rand(5, 12)
+attr NHShape4value					= rand(14, 21)
+attr NHGroundfloor_height 			= NHFloor_height+0.2
+attr NHFloor_height 				= rand(2.6, 3.6)
+attr NHTile_width1 					= rand(2, 14)
+attr NHTile_width2 					= rand(2, 14)
+attr NHDoor_width					= rand(5, 7)
+attr josh 							= print( rint(rand(rand(1,5), rand(2,3))))
+const cleanupFactor					= 0.01
+
+/*
+attr NHBuildingHeight				= (rint(rand(2 , 6))*NHFloor_height)+1
+attr NHLshape1value					= rand(10, 30)
+attr NHLshape2value					= rand(8, 25)
+attr NHFloor_height 				= rand(2.5,3)
+attr NHTile_side					= 0.5
+attr NHTile_width1 					= rand(3, 8)
+attr NHTile_width2 					= rand(4, 14)
+attr NHDoor_width					= 4.5*/
+
+const abei								= 	70% :1 
+											else: rint(rand(1,3)) 
+
+NewHouseStart -->				setback(SU.setbackdistances){street.front : NIL | street.back : NIL | street.side : NIL | remainder : newHouseLot2}
+							
+newHouseLot2-->					alignScopeToAxes()
+								rotateScope(rint(rand(0,4))*90,0,0)
+								newHouseLot3
+newHouseLot3 -->				
+								60% : shapeL(NHShape1value, NHShape2value){shape : newHouseRectangle | remainder : NIL}
+								else: shapeU(NHShape3value, NHShape4value, NHShape3value) {shape : newHouseRectangle | remainder : NIL}
+													
+newHouseRectangle --> 			alignScopeToAxes()
+								extrude(NHBuildingHeight)
+								comp(f){top: newHouseRoof | street.front: NHFacade(scope.sx , 1)| street.left: NHFacade(scope.sx, 2)|  street.right: NHFacade(scope.sx , 3) | side: NHFacade(scope.sx, 4)}
+
+newHouseRoof --> 				setback(1){all= newHouseGable1 | remainder = newHouseGable2}
+newHouseGable1 -->				extrude(1.5) split(y){~1: NewHouseRoofGable7 |~1: NewHouseRoofGable8 }
+newHouseGable2 -->				setback(1) {all : newHouseGable3 | remainder = newHouseGable4}
+newHouseGable4 --> 				innerRectangle(edge){shape : newHouseGable5 | remainder: newHouseGable3 }
+newHouseGable5 --> 				split(x){~1 : split(y){~1 : newHouseGable6 | ~3.75 : newHouseGable3} | ~3.75 : newHouseGable3}
+newHouseGable6 --> 				extrude(3) NHWall
+newHouseGable3 -->				cleanupGeometry(edges,0.11) normalizeUV(0, u, collectiveAllFaces) color(SU.Grays) SU.Asphalt
+
+NewHouseRoofGable7-->	NHWall
+NewHouseRoofGable8-->	SU.Blaech
+
+
+NHFacade(scpX, inx) --> split(y){NHGroundfloor_height    : NHFloor(split.index, split.total, scpX, inx)
+			| {~NHFloor_height : NHFloor(split.index, split.total, scpX, inx) }* }
+							
+
+NHFloor(floorIndex, floorTotal, scpX, inx) -->
+case scpX < 1: NHWall
+case scpX < 3: NHTile(floorIndex, floorTotal, split.index, inx)
+case scpX < 8: 	
+		split(x){
+			{ ~NHTile_width1 : NHTile(floorIndex, floorTotal, split.index, inx) }
+			| { ~NHTile_width2 : NHTile(floorIndex, floorTotal, split.index, inx) }*}
+else:
+	case inx == abei:
+	split(x){
+			{ ~NHTile_width1 : NHTile(floorIndex, floorTotal, split.index, inx) }*
+			| { ~NHDoor_width : NHDoor(floorIndex, floorTotal, split.index, inx)}
+			| { ~NHTile_width2 : NHTile(floorIndex, floorTotal, split.index, inx) }*
+			}
+	else: 
+		split(x){
+			{ ~NHTile_width1 : NHTile(floorIndex, floorTotal, split.index, inx)}
+			| { ~NHTile_width2 : NHTile(floorIndex, floorTotal, split.index, inx)}
+			| { ~NHTile_width1 : NHTile(floorIndex, floorTotal, split.index, inx)}
+			| { ~NHTile_width2 : NHTile(floorIndex, floorTotal, split.index, inx)}*
+			}
+
+
+NHTile(floorIndex, floorTotal, spX, inx) -->
+	WindowTile(floorIndex, floorTotal, spX, inx)
+	BalconyTile(floorIndex, floorTotal, spX, inx)
+	StorenTile(floorIndex, floorTotal, spX, scope.sy, inx)
+	
+WindowTile(floorIndex, floorTotal, spX, inx)-->
+		case scope.sx < 1 : NHWall
+		case scope.sx < 2 :
+			split(x){ ~0.5 : NHWall 
+			|  1.25 : split(y){ 0.1: NHWall | ~1: NHWindow1(floorIndex, floorTotal, spX) | 0.2: NHWall }
+			| ~0.5 : NHWall }	
+		case scope.sx < 3: 
+			split(x){ ~0.5 : NHWall 
+			|  2.25 : split(y){ 0.1: NHWall | ~1: NHWindow2(floorIndex, floorTotal, spX) | 0.2: NHWall }
+			| ~0.5 : NHWall }
+		else: 
+			split(x){ ~0.5 : NHWall 
+			|  5 : split(y){ 0.1: NHWall | ~1: NHWindow3(floorIndex, floorTotal, spX) | 0.2: NHWall }
+			| ~0.5 : NHWall }
+			
+			
+StorenTile(floorIndex, floorTotal, spX, spY, inx) --> 
+		case scope.sx < 1 : NIL
+		case scope.sx < 2 :
+			split(x){ ~0.5 : NIL 
+			|  1.25 : split(y){ 0.1: NIL | ~1: SU.StorenTile(1, spX, scope.sy, SU.Grays) | 0.2: NIL }
+			| ~0.5 : NIL }	
+		case scope.sx < 3: 
+			split(x){ ~0.5 : NIL 
+			|  2.25 : split(y){ 0.1: NIL | ~1: SU.StorenTile(1, spX, scope.sy, SU.Grays) | 0.2: NIL }
+			| ~0.5 : NIL }
+		else: 
+			split(x){ ~0.5 : NIL 
+			|  5 : split(y){ 0.1: NIL | ~1: SU.StorenTile(1, spX, scope.sy, SU.Grays) | 0.2: NIL }
+			| ~0.5 : NIL }
+			
+
+BalconyTile(floorIndex, floorTotal, spX, inx) -->
+
+case  spX%3 == josh%3 && inx == 1: NHBalcony(floorIndex, floorTotal, spX)
+else: NIL
+
+NHWindow1(floorIndex, floorTotal, spX) -->
+		set(trim.vertical, false)
+		s('1,'1,0)
+		i(SU.Fenster1Tuere) /*cleanupGeometry(all, 0.0)*/ t(0,0,-scope.sz+0.02)
+		projectUV(1)
+		SU.Vorhang(1)
+				 
+NHWindow2(floorIndex, floorTotal, spX) -->
+		set(trim.vertical, false)
+		s('1,'1,0)
+		i(SU.Fenster2Tuere) /*cleanupGeometry(all, 0.0)*/ t(0,0,-scope.sz+0.02)
+		projectUV(1)
+		SU.Vorhang(2)
+
+
+NHWindow3(floorIndex, floorTotal, spX) -->
+		set(trim.vertical, false)
+		s('1,'1,0)
+		i(SU.Fenster3Tuere) /*cleanupGeometry(all, 0.0)*/ t(0,0,-scope.sz+0.02)
+		projectUV(1)
+		SU.Vorhang(3)
+
+
+/*
+Storen(floorIndex, floorTotal, spX, spY) --> 
+	20%:		NIL
+	27.5%:	s('0.98,rand(0.1,0.75),0) translate(rel, scope, 0.01, spY-scope.sy, -0.1) i(SU.StorenU) cleanupGeometry(edges, 0) storen.
+	27.5%:	s('0.98,rand(1.2,2),0) translate(rel, scope, 0.01, spY-scope.sy, -0.1) i(SU.StorenM) cleanupGeometry(edges, 0) storen.
+	else:	s('0.98,rand(2,3),0) translate(rel, scope, 0.01, spY-scope.sy, -0.1) i(SU.StorenD) cleanupGeometry(edges, 0) storen.
+*/
+
+
+NHBalcony(floorIndex, floorTotal, spX) -->
+					case (floorIndex == 0) : NIL
+					else :
+
+					set(trim.vertical, false)
+				 	s('1,1.25,'1)	i(SU.StangenGelaender) t(0,0,-0.01) BalconyColor(1,SU.Grays) NHBkRails.
+
+
+attr jamie		= 1
+NHDoor(floorIndex, floorTotal, spX, inx) -->
+case floorIndex==0:
+	t(0,0,-jamie) 	split(x)	{0.3: Bwal(floorIndex, floorTotal, spX, inx)| ~1:BBwal |
+								2: split(y){ 3: NHDoor1(floorIndex, floorTotal, spX, inx)| ~1: NHWall}
+								|~1: BBwal | 0.3:Bwal(floorIndex, floorTotal, spX, inx)
+								}
+else: 	t(0,0,-jamie) 	split(x)	{0.3: Bwal(floorIndex, floorTotal, spX, inx)| ~1:BBwal |
+								2.25 : split(y){ 0.1: NHWall | ~1: NHWindow2(floorIndex, floorTotal, spX) | 0.2: NHWall }
+								|~1: BBwal | 0.3: Bwal(floorIndex, floorTotal, spX, inx)
+								}
+Bwal(floorIndex, floorTotal, spX, inx)--> 
+extrude(jamie) NHWall
+
+BBwal --> NHWall
+
+NHDoor1(floorIndex, floorTotal, spX, inx) -->
+i(SU.EingangsTuere)t(0,0,-scope.sz+0.07) cleanupGeometry(all, cleanupFactor)
+
+/*
+ NHDoor(floorIndex, floorTotal, spX, inx) -->
+	case (floorIndex == 0) : 
+		case scope.sx < 4 : 
+			set(trim.vertical, false)
+			s('1, '1.43, 3.085)
+ 			t(0, -1.5, -1.5)
+ 			i(SU.CompEingang2)
+		else:
+			set(trim.vertical, false)
+			s('1, '1.43, 3.085)
+ 			t(0, -1.5, -1.5)
+ 			i(SU.CompEingang1)
+	else:
+	set(trim.vertical, false)
+	s('1, '1, 1.575)
+	t(0,0,-1.5)
+	i(SU.Lichtgang)
+ */
+
+
+
+NHWall -->				
+color(SU.Grays)
+//color("#888888")
+SU.Asphalt	
+						
+												
