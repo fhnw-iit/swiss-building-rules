@@ -33,6 +33,7 @@ You can also just use these rules on start-shapes individually, if you wish to d
  <li> 3H60House </li>
  <li> 4H80House </li>
  <li> 5NewHouse </li>
+</ul>
 
 <h5>Rulefile 6; </h5>
 <p>This rule-file handles applying textures to walls and sets up all paths to premodelled geometry. If you want to use other textures or add your own you can add/replace the paths and rules there. The same is true for premodelled geometry, the asset-paths are set up as constants, which the other rule-files then can use. </p>
