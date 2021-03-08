@@ -29,19 +29,19 @@ You can also just use these rules on start-shapes individually, if you wish to d
  
  <ul>
  <li> 1FamilyHouse </li>
-  ![1FamilyHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/1FamilyHouse.png?raw=true"Reference")
+  ![1FamilyHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/1FamilyHouse.png?raw=true "Reference")
  <p>This building either has two roofs that are generated randomly, its mostly 1-2 stories high, sometimes has a balcony. Intended as a Family Home with a garden.</p>
  <li> 2OldHouse </li>
-  ![2OldHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/2OldHouse.png?raw=true"Reference")
+  ![2OldHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/2OldHouse.png?raw=true "Reference")
  <p>This rule reflects on houses you typically see in old cities. They have a distinct balcony with bent railing.</p>
  <li> 3H60House </li>
-  ![3H60House](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/3H60House.png?raw=true"Reference")
+  ![3H60House](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/3H60House.png?raw=true "Reference")
  <p>This rule reflect the 60ies Area Worker Homes. They have the typical 60ies Balcony.</p>
  <li> 4H80House </li>
-  ![4H80House](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/4H80House.png?raw=true"Reference")
+  ![4H80House](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/4H80House.png?raw=true "Reference")
  <p>This rule reflects on 80ies style Buildings. Also with their unique balcony and flat roofs.</p>
  <li> 5NewHouse </li>
-  ![5NewHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/5NewHouse.png?raw=true"Reference")
+  ![5NewHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/5NewHouse.png?raw=true "Reference")
  <p>This rule reflects on newer Architecture. Lots of gray but at least big Windows. Also only with flat roof.</p>
 </ul>
 
