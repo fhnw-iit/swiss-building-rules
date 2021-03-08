@@ -29,8 +29,14 @@ You can also just use these rules on start-shapes individually, if you wish to d
  
  <ul>
  <li> 1FamilyHouse </li>
-  <p>    ![1FamilyHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/1FamilyHouse.png?raw=true "Reference")
- This building either has two roofs that are generated randomly, its mostly 1-2 stories high, sometimes has a balcony. Intended as a Family Home with a garden.</p>
+ 
+ 
+ 
+ ![1FamilyHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/1FamilyHouse.png?raw=true "Reference")
+ 
+ 
+ 
+ <p>This building either has two roofs that are generated randomly, its mostly 1-2 stories high, sometimes has a balcony. Intended as a Family Home with a garden.</p>
  <li> 2OldHouse </li>
  <p>![2OldHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/2OldHouse.png?raw=true "Reference")
  This rule reflects on houses you typically see in old cities. They have a distinct balcony with bent railing.</p>
