@@ -29,10 +29,15 @@ You can also just use these rules on start-shapes individually, if you wish to d
  
  <ul>
  <li> 1FamilyHouse </li>
+  ![1FamilyHouse]
  <li> 2OldHouse </li>
+  ![2OldHouse]
  <li> 3H60House </li>
+  ![3H60House]
  <li> 4H80House </li>
+  ![4H80House]
  <li> 5NewHouse </li>
+  ![5NewHouse]
 </ul>
 
 <h5>Rulefile 6; </h5>
