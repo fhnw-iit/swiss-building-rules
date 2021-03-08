@@ -20,12 +20,12 @@ attr LOD = 0
 #-------------------------------------------------------------------------------------------------------------
 Lot --> 					
 
-case LOD ==1 :
+case LOD ==0 :
 							case (scope.sx < 12 || scope.sz < 12 || (scope.sx < 15 && scope.sz < 15)) : toosmallLot
 							case (geometry.area() < 600) : smallLot
 							case (geometry.area() > 1100): bigLot
 							else : middleLot
-case LOD ==0:				
+case LOD ==1:				
 							case (scope.sx < 12 || scope.sz < 12 || (scope.sx < 15 && scope.sz < 15)) : toosmallLot
 							case (geometry.area() < 600) : smallLot0
 							case (geometry.area() > 1100): bigLot0
