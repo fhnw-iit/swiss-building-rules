@@ -1,7 +1,9 @@
-Start
+<h1></h1>
 
+<h3>Start</h3>
+<p>
 Create a new CityEngine-Project or open an existing one, and open the CityEngineWorkspace-Folder in Explorer. Clone/download and open the repository and paste its content folders (assets, rules, scenes) into the respective folders of your CityEngine-Project-Workspace and merge (just make sure asset content goes into asset folder and rules into rules etc.). Now you should be able to use the rules and assets in your project.
-
+</p>
 
 
 
