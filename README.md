@@ -28,8 +28,8 @@ You can also just use these rules on start-shapes individually, if you wish to d
  IMPORTANT: If you want to change any attribute of any building while the rule flows from 0 to 1-5, you first have to check which rule is used (the differences should be more or less obvious). Then in the "Inspector" (in CityEngine) you can open the tabs of attributes of the specific house rule and there change the attributes. F.Ex. you want to change the Heights of a building: find out the rule, which LOD, then open tab in Inspector and change it for just this specific rule. This is a workaround and a little obnoxious, but a merge of all sameish attributes is currently not planned. </p>
  
  <ul>
- <li> 1FamilyHouse </li>
-  <p>![1FamilyHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/1FamilyHouse.png?raw=true "Reference")
+ <li> 1FamilyHouse 
+  <p>![1FamilyHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/1FamilyHouse.png?raw=true "Reference")</li>
  This building either has two roofs that are generated randomly, its mostly 1-2 stories high, sometimes has a balcony. Intended as a Family Home with a garden.</p>
  <li> 2OldHouse </li>
  <p>![2OldHouse](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/2OldHouse.png?raw=true "Reference")
