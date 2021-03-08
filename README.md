@@ -1,14 +1,13 @@
-<h1></h1>
+<h1>Swiss Building Rules for CityEngine</h1>
 
 <h3>Start</h3>
-<p>
-Create a new CityEngine-Project or open an existing one, and open the CityEngineWorkspace-Folder in Explorer. Clone/download and open the repository and paste its content folders (assets, rules, scenes) into the respective folders of your CityEngine-Project-Workspace and merge (just make sure asset content goes into asset folder and rules into rules etc.). Now you should be able to use the rules and assets in your project.
+<p> Create a new CityEngine-Project or open an existing one, and open the CityEngineWorkspace-Folder in Explorer. Clone/download and open the repository and paste its content folders (assets, rules, scenes) into the respective folders of your CityEngine-Project-Workspace and merge (just make sure asset content goes into asset folder and rules into rules etc.). Now you should be able to use the rules and assets in your project.
 </p>
 
 
 
 
-Disclaimer:
+<h4>Disclaimer:</h4>
 These rules dont just spit out clean and working Geometry. In crucial areas ( around player ) you should always check, if the generated Geometry is OK for use or not. Special: 2OldHouse.cga has a habit of not fully generating all Geometry on a building - if this happens just select these houses and press Generate again -> this should fix that and add the missing Geometry. For all other rules: If generation yields weird or unnatural seeming results, you can either update seed (change seed/try another seed) or (many times with weirdly shaped Base-shapes) delete object entirely.
 
 IMPORTANT: When you import into Unreal, while importing with Datasmith (having the dialogue still open), check out the Light-Map Settings, there you should adjust the Light-Map Size to a smaller value around 32 or max 64. Bake-times are reduced this way. If this doesnt give you the result you want, try with higher values for individual pieces.
