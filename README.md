@@ -10,28 +10,21 @@
 <h4>IMPORTANT:</h4><p> When you import into Unreal, while importing with Datasmith (having the dialogue still open), check out the Light-Map Settings, there you should adjust the Light-Map Size to a smaller value around 32 or max 64. Bake-times are reduced this way. If this doesnt give you the result you want, try with higher values for individual pieces.</p>
 
 
-LOD : 0 is planned as the highest Detail Version, which will not be implemented before this Repository goes Public. It is recommended to just use for very few (like 2 or 3) Buildings, also it is not the best option to export in Unreal.
-LOD : 1 is the Higher Detail Version |
-LOD : 2 is the low Detail Version |
+LOD : 0 is the high Detail Version |
+LOD : 1 is the low Detail Version |
 
+<h2>Filestructure:</h2>
 
-Heights have to be changed in individual files, 1,2,3,4,5 and 1LOD,2LOD,3LOD,4LOD,5LOD. CAUTION: If you wish to implement heights differently for several Buildings: Heights are implemented as floorAmount * floorHeight ( meaning: how many floors the building has * the floorHeight). FloorAmount is not called that way yet if I remember correctly, but it's one of the first lines in each file. FloorAmount is set as random between two numbers.
+![Rulestructure](https://github.com/fhnw-iit/swiss-building-rules/blob/master/Swiss-Building-Rules/RuleFlowSwissBuildings.png?raw=true "Rulestructure")
 
+<h5>Rulefile 0;</h5>
+<p>Rulefile 0 is the one you will be placing on Start-Shapes. In this rule the face-sizes of the start-shapes are calculated and upon their calculation the rule distributes the other rule-files 1-5 on to the start-shape.</p>
 
-Filestructure: (NOW)
+<h5> Rulefiles 1-5;</h4>
+<p> Theese files contain all the attributes and rules to the specific house-style. The rule builds the structural geometry of the specified House-rule and places the modelled Geometry from the Assets-folder to which all paths are specified in the 6SetUp-Rule.
+You can also just use these rules on start-shapes individually, if you wish to do so. 
+ IMPORTANT: If you want to change any attribute of any building while the rule flows from 0 to 1-5, you first have to check which rule is used (the differences should be more or less obvious). Then in the "Inspector" (in CityEngine) you can open the tabs of attributes of the specific house rule and there change the attributes. F.Ex. you want to change the Heights of a building: find out the rule, which LOD, then open tab in Inspector and change it for just this specific rule. This is a workaround and a little obnoxious, but a merge of all sameish attributes is currently not planned. </p>
 
-[importTo]: file knows and can talk to |
-[-->]: rule flows/continues in this file
+<h5>Rulefile 6; </h5>
+<p>This rule-file handles applying textures to walls and sets up all paths to premodelled geometry. If you want to use other textures or add your own you can add/replace the paths and rules there. The same is true for premodelled geometry, the asset-paths are set up as constants, which the other rule-files then can use. </p>
 
-
-INIT:
-1,2,3,4,5,6 importTo 0|
-0 importTo 1,2,3,4,5|
-6 importTo 1,2,3,4,5|
-
-RULE FLOW:
-
-0 --> 1,2,3,4,5 |
-1,2,3,4,5 --> 6|
-0 --> 1LOD,2LOD,3LOD,4LOD,5LOD |
-1LOD,2LOD,3LOD,4LOD,5LOD --> 6LOD
